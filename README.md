@@ -21,4 +21,4 @@
 1. Клонирование:
    ```bash
    git clone <ссылка>
-   cd django-mailing-course
+   cd django-mailing-course.
