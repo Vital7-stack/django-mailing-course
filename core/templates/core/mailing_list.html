@@ -1,0 +1,19 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+  <h2>Ваши рассылки</h2>
+  <a href="{% url 'mailing_create' %}">Создать новую рассылку</a>
+  <hr>
+  <ul>
+    {% for mailing in mailings %}
+      <li>
+        <a href="{% url 'mailing_detail' mailing.pk %}">
+          Рассылка #{{ mailing.id }}: {{ mailing.message.subject }} ({{ mailing.status }})
+        </a>
+        {% if mailing.owner == user %}(Ваша){% endif %}
+      </li>
+    {% empty %}
+      <li>У вас пока нет рассылок.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

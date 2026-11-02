@@ -1,0 +1,20 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<h1>Ваша статистика рассылок</h1>
+<div class="stats-grid">
+  <div class="stat-card">
+    <h3>Всего попыток отправки</h3>
+    <p class="value">{{ total_attempts }}</p>
+  </div>
+  <div class="stat-card">
+    <h3>Успешных</h3>
+    <p class="value" style="color: green;">{{ successful }}</p>
+  </div>
+  <div class="stat-card">
+    <h3>Неуспешных</h3>
+    <p class="value" style="color: red;">{{ failed }}</p>
+  </div>
+</div>
+<a href="{% url 'index' %}">Вернуться на главную</a>
+{% endblock %}

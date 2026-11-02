@@ -1,0 +1,17 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h2>Регистрация</h2>
+<!-- Если есть сообщения (messages) от Django, они выведутся здесь -->
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+  {% endfor %}
+{% endif %}
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+</form>
+<p>Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a></p>
+{% endblock %}

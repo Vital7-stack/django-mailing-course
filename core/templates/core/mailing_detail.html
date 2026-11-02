@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Рассылка #{{ mailing.id }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .status-badge { padding: 5px 10px; border-radius: 4px; color: white; font-weight: bold; }
+        .status-Создана { background-color: #6c757d; }
+        .status-Запущена { background-color: #007bff; }
+        .status-Завершена { background-color: #28a745; }
+        .messages { margin-bottom: 15px; }
+        .message-success { color: green; background: #d4edda; padding: 10px; border-radius: 4px; }
+        .message-error { color: red; background: #f8d7da; padding: 10px; border-radius: 4px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h1>Рассылка #{{ mailing.id }}</h1>
+
+    <!-- Блок сообщений (успех/ошибки от views.py) -->
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="message-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px;">
+        <p><strong>Тема письма:</strong> {{ mailing.message.subject }}</p>
+        <p><strong>Текст письма:</strong> {{ mailing.message.body|truncatechars:100 }}</p>
+
+        <p><strong>Период рассылки:</strong>
+            {{ mailing.start_time|date:"d.m.Y H:i" }} — {{ mailing.end_time|date:"d.m.Y H:i" }}
+        </p>
+
+        <p><strong>Статус:</strong>
+            <span class="status-badge status-{{ mailing.status|escape }}" style="background: #ccc;">
+                {{ mailing.get_status_display }}
+            </span>
+        </p>
+
+        <p><strong>Получателей:</strong> {{ mailing.recipients.count }}</p>
+
+        <hr>
+
+        <!-- Кнопка запуска -->
+        <a href="{% url 'start_mailing' mailing.pk %}" class="btn" style="background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+            🚀 Запустить рассылку вручную
+        </a>
+        <small style="display: block; margin-top: 5px; color: #666;">
+            (Проверка времени: сейчас должно быть между Start и End)
+        </small>
+    </div>
+
+    <!-- Таблица попыток (Attempts) -->
+    <h3>История попыток отправки</h3>
+    {% if mailing.attempts.all %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Время попытки</th>
+                    <th>Статус</th>
+                    <th>Ответ сервера / Ошибка</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for attempt in mailing.attempts.all %}
+                <tr>
+                    <td>{{ attempt.attempt_time|date:"d.m.Y H:i:s" }}</td>
+                    <td>
+                        {% if attempt.status == 'Успешно' %}
+                            <span style="color: green;">✅ {{ attempt.status }}</span>
+                        {% else %}
+                            <span style="color: red;">❌ {{ attempt.status }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ attempt.server_response|default:"Нет данных" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Пока нет записей о попытках отправки.</p>
+    {% endif %}
+
+</body>
+</html>

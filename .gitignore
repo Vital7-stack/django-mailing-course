@@ -1,0 +1,32 @@
+# Виртуальное окружение (твоё venv)
+venv/
+.venv/
+env/
+
+# Файлы Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Файлы базы данных SQLite (если используешь её для тестов)
+db.sqlite3
+*.sqlite3
+
+# Медиа и статические файлы (если будут загружаться пользователями)
+media/
+staticfiles/
+
+# Переменные окружения (пароли, ключи, SECRET_KEY)
+.env
+.env.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Логи и временные файлы
+logs/
+tmp/
